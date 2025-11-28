@@ -1,6 +1,43 @@
+"use client"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { useState } from "react"
+
+function TechBadge({ tech }: { tech: string }) {
+  const [isHovered, setIsHovered] = useState(false)
+
+  const getTechIcon = (techName: string) => {
+    const icons: Record<string, string> = {
+      Angular: "A",
+      "Node.js": "🟢",
+      "Full Stack": "⚡",
+      NestJS: "N",
+      PostgreSQL: "🐘",
+      TypeORM: "📊",
+      React: "⚛️",
+      Bootstrap: "B",
+      JWT: "🔐",
+    }
+    return icons[techName] || "💻"
+  }
+
+  return (
+    <Badge
+      variant="secondary"
+      className="relative group cursor-default"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <span className={`transition-all ${isHovered ? "mr-2" : ""}`}>{tech}</span>
+      {isHovered && (
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-3xl animate-in fade-in zoom-in duration-200">
+          {getTechIcon(tech)}
+        </span>
+      )}
+    </Badge>
+  )
+}
 
 export function ProjectsSection() {
   const projects = [
@@ -54,9 +91,7 @@ export function ProjectsSection() {
                   <p className="text-muted-foreground mb-4 leading-relaxed">{project.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary">
-                        {tag}
-                      </Badge>
+                      <TechBadge key={tag} tech={tag} />
                     ))}
                   </div>
                 </CardContent>

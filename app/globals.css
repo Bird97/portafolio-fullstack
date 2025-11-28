@@ -141,3 +141,20 @@
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
+
+/* Adding 3D transform utilities for flip card animations */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-x-180 {
+  transform: rotateX(180deg);
+}

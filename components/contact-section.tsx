@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { Mail, Linkedin, Github, Twitter } from "lucide-react"
+import Image from "next/image"
+
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -22,11 +24,19 @@ export function ContactSection() {
     console.log("Form submitted:", formData)
   }
 
+  const WhatsAppIcon = () => (
+    <Image
+      src="/images/descarga.png"
+      alt="WhatsApp"
+      width={40}
+      height={45}
+    />
+  );
   const socialLinks = [
     { icon: Mail, href: "mailto:juamacx@gmail.com", label: "Email" },
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: Github, href: "https://github.com", label: "GitHub" },
-    { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/juan-camilo-p%C3%A1jaro-reyes/", label: "LinkedIn" },
+    { icon: Github, href: "https://github.com/Bird97", label: "GitHub" },
+    { icon: WhatsAppIcon, href: "https://wa.me/+573122031791", label: "WhatsApp" },
   ]
 
   return (
@@ -44,47 +54,13 @@ export function ContactSection() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          <Card>
-            <CardContent className="pt-6">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Input
-                    placeholder="Tu nombre"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <Input
-                    type="email"
-                    placeholder="Tu email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <Textarea
-                    placeholder="Tu mensaje"
-                    rows={5}
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full">
-                  Enviar Mensaje
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+          
 
-          <div className="space-y-6">
+          <div className="space-y-5">
             <Card>
               <CardContent className="pt-6">
                 <h3 className="text-xl font-bold mb-4">Redes Sociales</h3>
-                <div className="space-y-3">
+                <div className="space-y-3 flex display-ruby">
                   {socialLinks.map((link) => {
                     const Icon = link.icon
                     return (
@@ -93,9 +69,9 @@ export function ContactSection() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors"
-                      >
-                        <Icon className="h-5 w-5 text-primary" />
+                        className="flex flex-col items-center gap-1 p-3 rounded-lg hover:bg-secondary transition-colors"
+>
+                        <Icon className="h-10 w-10 text-primary" />
                         <span className="font-medium">{link.label}</span>
                       </a>
                     )
@@ -103,7 +79,8 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
-
+          </div>
+          <div className="space-y-5">
             <Card>
               <CardContent className="pt-6">
                 <h3 className="text-xl font-bold mb-4">Disponibilidad</h3>
@@ -115,6 +92,7 @@ export function ContactSection() {
             </Card>
           </div>
         </div>
+        
       </div>
     </section>
   )

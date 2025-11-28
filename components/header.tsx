@@ -33,8 +33,8 @@ export function Header() {
     >
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-primary">
-            Juan
+          <Link href="/" className="text-5xl font-bold text-primary">
+            Juancho
           </Link>
 
           {/* Desktop Navigation */}
@@ -43,7 +43,7 @@ export function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+                  className="nav-underline text-2xl font-medium text-foreground/80 hover:text-primary transition-colors"
                 >
                   {link.label}
                 </Link>
@@ -69,7 +69,7 @@ export function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+                  className="nav-underline block text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -79,6 +79,29 @@ export function Header() {
           </ul>
         )}
       </nav>
+      <style jsx global>{`
+        .nav-underline {
+          position: relative;
+          display: inline-block;
+        }
+        .nav-underline::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: -2px;
+          width: 100%;
+          height: 2px;
+          background: currentColor;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+          border-radius: 2px;
+          opacity: 0.7;
+        }
+        .nav-underline:hover::after, .nav-underline:focus::after {
+          transform: scaleX(1);
+        }
+      `}</style>
     </header>
   )
 }
