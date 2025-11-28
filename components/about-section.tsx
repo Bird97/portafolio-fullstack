@@ -57,7 +57,7 @@ export function AboutSection() {
             return (
               <div
                 key={index}
-                className="relative h-[280px] cursor-pointer"
+                className="relative h-[320px] cursor-pointer"
                 style={{ perspective: "1000px" }}
                 onClick={() => handleCardClick(index)}
               >
