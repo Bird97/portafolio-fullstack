@@ -60,7 +60,7 @@ export function ContactSection() {
             <Card>
               <CardContent className="pt-6">
                 <h3 className="text-xl font-bold mb-4">Redes Sociales</h3>
-                <div className="space-y-3 flex display-ruby">
+                <div className="space-y-3 flex flex-col lg:flex-row">
                   {socialLinks.map((link) => {
                     const Icon = link.icon
                     return (

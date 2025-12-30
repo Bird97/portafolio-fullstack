@@ -65,7 +65,7 @@ export function ProcessSection() {
       description: "Asegurando calidad y rendimiento",
       backIcon: Languages,
       backTitle: "Mejorando mi inglés",
-      backDescription: "Practico inglés a diario con IA para comunicarme mejor en el ámbito internacional",
+      backDescription: "Practico inglés a diario para comunicarme mejor en el ámbito internacional",
     },
   ]
 
@@ -74,16 +74,16 @@ export function ProcessSection() {
   }
 
   return (
-    <section className="py-24 px-4">
-      <div className="container mx-auto">
+    <section className="py-24">
+      <div className="w-full px-4 md:px-8 mx-auto max-w-7xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">Mi Proceso</h2>
-          <p className="text-2xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg md:text-2xl text-muted-foreground max-w-2xl mx-auto">
             Un enfoque estructurado para crear soluciones digitales excepcionales
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {steps.map((step, index) => {
             const FrontIcon = step.icon
             const BackIcon = step.backIcon
@@ -92,7 +92,7 @@ export function ProcessSection() {
             return (
               <div
                 key={index}
-                className="relative h-48 cursor-pointer perspective-1000"
+                className="relative h-[150px] md:h-[220px] lg:h-48 cursor-pointer perspective-1000"
                 onClick={() => toggleFlip(index)}
               >
                 <div
@@ -103,30 +103,31 @@ export function ProcessSection() {
                 >
                   {/* Front side */}
                   <div
-                    className="absolute inset-0 backface-hidden flex items-start gap-4 p-6 rounded-lg bg-card border-2 border-border hover:border-primary/50 transition-all"
+                    className="absolute inset-0 backface-hidden flex items-start gap-2 md:gap-4 p-4 md:p-5 lg:p-6 rounded-lg bg-card border-2 border-border hover:border-primary/50 transition-all"
                     style={{ backfaceVisibility: "hidden" }}
                   >
-                    <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <FrontIcon className="h-6 w-6 text-primary" />
+                    <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                      <FrontIcon className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                     </div>
-                    <div>
-                      <div className="text-sm font-bold text-primary mb-2">Paso {index + 1}</div>
-                      <h3 className="text-2xl font-bold mb-2 text-balance">{step.title}</h3>
-                      <p className="text-xl text-muted-foreground">{step.description}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xl md:text-xl font-bold text-primary mb-1">Paso {index + 1}</div>
+                      <h3 className="text-base md:text-xl
+                       lg:text-xl font-bold mb-1 text-balance leading-tight">{step.title}</h3>
+                      <p className="text-sm md:text-base lg:text-xl text-muted-foreground leading-snug">{step.description}</p>
                     </div>
                   </div>
 
                   {/* Back side */}
                   <div
-                    className="absolute inset-0 backface-hidden rotate-x-180 flex items-center gap-4 p-6 rounded-lg bg-primary text-primary-foreground border-2 border-primary"
+                    className="absolute inset-0 backface-hidden rotate-x-180 flex items-start gap-3 md:gap-4 p-4 md:p-5 lg:p-6 rounded-lg bg-primary text-primary-foreground border-2 border-primary"
                     style={{ backfaceVisibility: "hidden", transform: "rotateX(180deg)" }}
                   >
-                    <div className="flex-shrink-0 w-12 h-12 bg-primary-foreground/20 rounded-lg flex items-center justify-center">
-                      <BackIcon className="h-6 w-6" />
+                    <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-primary-foreground/20 rounded-lg flex items-center justify-center">
+                      <BackIcon className="h-5 w-5 md:h-6 md:w-6" />
                     </div>
-                    <div>
-                      <h3 className="text-2xl font-bold mb-2 text-balance">{step.backTitle}</h3>
-                      <p className="text-xl opacity-90">{step.backDescription}</p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base md:text-xl lg:text-xl font-bold mb-1 text-balance leading-tight">{step.backTitle}</h3>
+                      <p className="text-sm md:text-base lg:text-xl opacity-90 leading-snug">{step.backDescription}</p>
                     </div>
                   </div>
                 </div>

@@ -39,8 +39,8 @@ export function AboutSection() {
   }
 
   return (
-    <section id="acerca" className="py-24 px-4 bg-secondary/30">
-      <div className="container mx-auto">
+    <section id="acerca" className="py-24 bg-secondary/30">
+      <div className="w-full px-4 md:px-8 mx-auto max-w-7xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">Acerca de mí</h2>
           <p className="text-2xl text-muted-foreground max-w-2xl mx-auto">
@@ -48,7 +48,7 @@ export function AboutSection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6 md:gap-8">
           {features.map((feature, index) => {
             const Icon = feature.icon
             const PersonalIcon = feature.personalIcon
@@ -57,7 +57,7 @@ export function AboutSection() {
             return (
               <div
                 key={index}
-                className="relative h-[320px] cursor-pointer"
+                className="relative h-[380px] md:h-[320px] cursor-pointer"
                 style={{ perspective: "1000px" }}
                 onClick={() => handleCardClick(index)}
               >
@@ -72,12 +72,12 @@ export function AboutSection() {
                     className="absolute w-full h-full border-2 hover:border-primary/50 transition-all"
                     style={{ backfaceVisibility: "hidden" }}
                   >
-                    <CardContent className="pt-8 pb-8 text-center space-y-4 h-full flex flex-col justify-center">
-                      <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                        <Icon className="h-8 w-8 text-primary" />
+                    <CardContent className="pt-6 pb-6 px-4 md:pt-8 md:pb-8 text-center space-y-3 md:space-y-4 h-full flex flex-col justify-center">
+                      <div className="mx-auto w-12 h-12 md:w-16 md:h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                        <Icon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
                       </div>
-                      <h3 className="text-3xl font-bold">{feature.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed text-xl">{feature.description}</p>
+                      <h3 className="text-xl md:text-3xl font-bold">{feature.title}</h3>
+                      <p className="text-muted-foreground leading-relaxed text-base md:text-xl">{feature.description}</p>
                     </CardContent>
                   </Card>
 
@@ -88,11 +88,11 @@ export function AboutSection() {
                       transform: "rotateY(180deg)",
                     }}
                   >
-                    <CardContent className="h-full flex flex-col items-center justify-center space-y-6 p-8">
-                      <div className="mx-auto w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center">
-                        <PersonalIcon className="h-10 w-10 text-primary" />
+                    <CardContent className="h-full flex flex-col items-center justify-center space-y-4 md:space-y-6 p-6 md:p-8">
+                      <div className="mx-auto w-16 h-16 md:w-20 md:h-20 bg-primary/20 rounded-full flex items-center justify-center">
+                        <PersonalIcon className="h-8 w-8 md:h-10 md:w-10 text-primary" />
                       </div>
-                      <p className="text-2xl font-bold text-center text-balance">{feature.personalInfo}</p>
+                      <p className="text-lg md:text-2xl font-bold text-center text-balance">{feature.personalInfo}</p>
                     </CardContent>
                   </Card>
                 </div>

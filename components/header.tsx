@@ -31,9 +31,9 @@ export function Header() {
         isScrolled ? "bg-background/80 backdrop-blur-md shadow-md" : "bg-transparent"
       }`}
     >
-      <nav className="container mx-auto px-4 py-4">
+      <nav className="w-full px-3 md:px-8 mx-auto max-w-7xl py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="text-5xl font-bold text-primary">
+          <Link href="/" className="text-3xl md:text-5xl font-bold text-primary">
             Juancho
           </Link>
 
@@ -55,7 +55,7 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden h-12 w-12"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -69,7 +69,7 @@ export function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="nav-underline block text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+                  className="nav-underline block text-lg font-medium text-foreground/80 hover:text-primary transition-colors py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
