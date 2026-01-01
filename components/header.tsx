@@ -26,12 +26,21 @@ export function Header() {
   ]
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/80 backdrop-blur-md shadow-md" : "bg-transparent"
-      }`}
-    >
-      <nav className="w-full px-3 md:px-8 mx-auto max-w-7xl py-4">
+    <>
+      {/* Mobile Menu Backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? "bg-background/80 backdrop-blur-md shadow-md" : "bg-transparent"
+        }`}
+      >
+        <nav className="w-full px-3 md:px-8 mx-auto max-w-7xl py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-3xl md:text-5xl font-bold text-primary">
             Juancho
@@ -64,7 +73,7 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <ul className="md:hidden mt-4 space-y-4 pb-4">
+          <ul className="md:hidden mt-4 space-y-4 pb-4 bg-background/95 backdrop-blur-md rounded-lg px-4 shadow-lg">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
@@ -103,5 +112,6 @@ export function Header() {
         }
       `}</style>
     </header>
+    </>
   )
 }

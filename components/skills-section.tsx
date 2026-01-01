@@ -112,7 +112,7 @@ function SkillBadge({ skill }: { skill: string }) {
     <>
       <Badge
         variant="secondary"
-        className="text-base py-2 px-4 hover:bg-primary hover:text-primary-foreground transition-all cursor-pointer"
+        className="text-base py-2 px-4 hover:bg-primary hover:text-primary-foreground hover:scale-110 transition-all cursor-pointer"
         onClick={() => setShowCard(true)}
       >
         {skill}
