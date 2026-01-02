@@ -117,6 +117,8 @@ export function SkillsSection() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const isScrollingRef = useRef(false)
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   const toggleCategory = (title: string) => {
     setIsAutoPlaying(false) // Detener auto-play cuando el usuario interactúa
@@ -219,9 +221,9 @@ export function SkillsSection() {
     return () => clearInterval(interval)
   }, [isAutoPlaying, skillCategories.length])
 
-  // Scroll to current card
+  // Scroll to current card (solo cuando NO es scroll manual)
   useEffect(() => {
-    if (scrollContainerRef.current) {
+    if (scrollContainerRef.current && !isScrollingRef.current) {
       const cards = scrollContainerRef.current.children
       if (cards[currentIndex]) {
         cards[currentIndex].scrollIntoView({
@@ -232,6 +234,43 @@ export function SkillsSection() {
       }
     }
   }, [currentIndex])
+
+  // Detectar scroll manual para actualizar el índice
+  useEffect(() => {
+    const container = scrollContainerRef.current
+    if (!container) return
+
+    const handleScroll = () => {
+      isScrollingRef.current = true
+      
+      // Limpiar timeout anterior
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
+      }
+
+      // Esperar a que el scroll se detenga
+      scrollTimeoutRef.current = setTimeout(() => {
+        const scrollLeft = container.scrollLeft
+        const cardWidth = container.children[0]?.clientWidth || 0
+        const gap = 24 // gap-6 = 24px
+        const newIndex = Math.round(scrollLeft / (cardWidth + gap))
+        
+        if (newIndex !== currentIndex && newIndex >= 0 && newIndex < skillCategories.length) {
+          setCurrentIndex(newIndex)
+        }
+        
+        isScrollingRef.current = false
+      }, 20) // Esperar 150ms después de que se detenga el scroll
+    }
+
+    container.addEventListener("scroll", handleScroll, { passive: true })
+    return () => {
+      container.removeEventListener("scroll", handleScroll)
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
+      }
+    }
+  }, [currentIndex, skillCategories.length])
 
   const handlePrevious = () => {
     setIsAutoPlaying(false)
