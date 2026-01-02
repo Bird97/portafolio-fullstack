@@ -105,7 +105,7 @@ export function ProcessSection() {
             return (
               <div
                 key={index}
-                className="relative h-[150px] md:h-[220px] lg:h-48 cursor-pointer perspective-1000"
+                className="relative h-[150px] md:h-[220px] lg:h-48 cursor-pointer perspective-1000 hover:scale-105 transition-transform duration-300"
                 onClick={() => toggleFlip(index)}
               >
                 <div

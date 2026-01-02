@@ -25,13 +25,13 @@ export function HeroSection() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <Button size="lg" className="text-lg md:text-2xl w-full sm:w-auto z-1" asChild>
+            <Button size="lg" className="text-lg md:text-2xl w-full sm:w-auto z-1 hover:scale-110 transition-transform duration-300" asChild>
               <a href="#proyectos">
                 Ver Proyectos
                 <ArrowRight className="ml-2 h-5 w-5" />
               </a>
             </Button>
-            <Button size="lg" variant="outline" className="text-lg md:text-2xl w-full sm:w-auto z-1" asChild>
+            <Button size="lg" variant="outline" className="text-lg md:text-2xl w-full sm:w-auto z-1 hover:scale-110 transition-transform duration-300" asChild>
               <a href="#contacto">Contáctame</a>
             </Button>
           </div>

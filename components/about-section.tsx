@@ -69,7 +69,7 @@ export function AboutSection() {
                   }}
                 >
                   <Card
-                    className="absolute w-full h-full border-2 hover:border-primary/50 transition-all"
+                    className="absolute w-full h-full border-2 hover:border-primary/50 transition-all hover:scale-105 transition-transform duration-300"
                     style={{ backfaceVisibility: "hidden" }}
                   >
                     <CardContent className="pt-6 pb-6 px-4 md:pt-8 md:pb-8 text-center space-y-3 md:space-y-4 h-full flex flex-col justify-center">
