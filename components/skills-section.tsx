@@ -2,8 +2,8 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { useState } from "react"
-import { X, Code2, Server, Database, Wrench, TestTube, Palette, ChevronDown } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { X, Code2, Server, Database, Wrench, TestTube, Palette, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 
 function SkillBadge({ skill, icon }: { skill: string; icon: string }) {
   const [showCard, setShowCard] = useState(false)
@@ -62,7 +62,7 @@ function SkillBadge({ skill, icon }: { skill: string; icon: string }) {
   return (
     <>
       <div
-        className="group flex items-center gap-2 bg-secondary/50 hover:bg-primary/10 border border-border hover:border-primary/50 rounded-lg px-4 py-3 cursor-pointer transition-all hover:scale-101 hover:shadow-md"
+        className="group flex items-center gap-2 bg-secondary/50 hover:bg-primary/10 border border-border hover:border-primary/50 rounded-lg px-4 py-3 cursor-pointer transition-all  hover:shadow-md"
         onClick={() => setShowCard(true)}
       >
         <span className="text-2xl">{icon}</span>
@@ -114,8 +114,12 @@ interface SkillCategory {
 
 export function SkillsSection() {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const toggleCategory = (title: string) => {
+    setIsAutoPlaying(false) // Detener auto-play cuando el usuario interactúa
     const newExpanded = new Set(expandedCategories)
     if (newExpanded.has(title)) {
       newExpanded.delete(title)
@@ -204,6 +208,47 @@ export function SkillsSection() {
     },
   ]
 
+  // Auto-scroll effect
+  useEffect(() => {
+    if (!isAutoPlaying) return
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % skillCategories.length)
+    }, 3000) // Cambia cada 3 segundos
+
+    return () => clearInterval(interval)
+  }, [isAutoPlaying, skillCategories.length])
+
+  // Scroll to current card
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      const cards = scrollContainerRef.current.children
+      if (cards[currentIndex]) {
+        cards[currentIndex].scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        })
+      }
+    }
+  }, [currentIndex])
+
+  const handlePrevious = () => {
+    setIsAutoPlaying(false)
+    setCurrentIndex((prev) => (prev - 1 + skillCategories.length) % skillCategories.length)
+  }
+
+  const handleNext = () => {
+    setIsAutoPlaying(false)
+    setCurrentIndex((prev) => (prev + 1) % skillCategories.length)
+  }
+
+  const handleCardClick = (index: number, title: string) => {
+    setIsAutoPlaying(false)
+    setCurrentIndex(index)
+    toggleCategory(title)
+  }
+
   return (
     <section id="habilidades" className="py-24 bg-secondary/30 relative overflow-hidden">
       <div className="w-full px-4 md:px-8 mx-auto max-w-7xl">
@@ -214,51 +259,117 @@ export function SkillsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {skillCategories.map((category, index) => {
-            const isExpanded = expandedCategories.has(category.title)
-            return (
-              <Card
-                key={category.title}
-                className={`p-6 bg-gradient-to-br ${category.gradient} border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-lg animate-in fade-in slide-in-from-bottom-4`}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div
-                  className="flex items-center justify-between cursor-pointer group"
-                  onClick={() => toggleCategory(category.title)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                      {category.icon}
-                    </div>
-                    <h3 className="text-xl md:text-2xl font-bold">{category.title}</h3>
-                  </div>
-                  <ChevronDown
-                    className={`h-6 w-6 text-primary transition-transform duration-300 ${
-                      isExpanded ? "rotate-180" : ""
-                    }`}
-                  />
-                </div>
-                
-                <div
-                  className={`grid grid-cols-1 gap-2 transition-all duration-300 overflow-hidden ${
-                    isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+        {/* Carousel Container */}
+        <div className="relative">
+          {/* Fade Gradients - Hidden on mobile and when first/last card is active */}
+          {currentIndex !== 0 && (
+            <div className="hidden md:block absolute left-0 top-0 bottom-0 w-48 bg-gradient-to-r from-background via-secondary/30 to-transparent z-10 pointer-events-none" />
+          )}
+          {currentIndex !== skillCategories.length - 1 && (
+            <div className="hidden md:block absolute right-0 top-0 bottom-0 w-48 bg-gradient-to-l from-background via-secondary/30 to-transparent z-10 pointer-events-none" />
+          )}
+
+          {/* Navigation Buttons */}
+          <Button
+            variant="outline"
+            size="icon"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full shadow-lg bg-background/80 backdrop-blur-sm hidden md:flex"
+            onClick={handlePrevious}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full shadow-lg bg-background/80 backdrop-blur-sm hidden md:flex"
+            onClick={handleNext}
+          >
+            <ChevronRight className="h-6 w-6" />
+          </Button>
+
+          {/* Cards Container */}
+          <div
+            ref={scrollContainerRef}
+            className="flex gap-6 pt-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 px-2 hide-scrollbar"
+            onMouseEnter={() => setIsAutoPlaying(false)}
+            onTouchStart={() => setIsAutoPlaying(false)}
+          >
+            {skillCategories.map((category, index) => {
+              const isExpanded = expandedCategories.has(category.title)
+              const isActive = index === currentIndex
+              return (
+                <Card
+                  key={category.title}
+                  className={`flex-shrink-0 w-[85vw] md:w-[400px] snap-center p-6 bg-gradient-to-br ${category.gradient} border-2 transition-all duration-300 ${
+                    isActive
+                      ? "border-primary shadow-xl scale-105"
+                      : "border-border hover:border-primary/50 hover:shadow-lg"
                   }`}
                 >
-                  {category.skills.map((skill) => (
-                    <SkillBadge key={skill.name} skill={skill.name} icon={skill.icon} />
-                  ))}
-                </div>
+                  <div
+                    className="flex items-center justify-between cursor-pointer group"
+                    onClick={() => handleCardClick(index, category.title)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                        {category.icon}
+                      </div>
+                      <h3 className="text-xl md:text-2xl font-bold">{category.title}</h3>
+                    </div>
+                    <ChevronDown
+                      className={`h-6 w-6 text-primary transition-transform duration-300 ${
+                        isExpanded ? "rotate-180" : ""
+                      }`}
+                    />
+                  </div>
 
-                {!isExpanded && (
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Click para ver {category.skills.length} habilidades
-                  </p>
-                )}
-              </Card>
-            )
-          })}
+                  <div
+                    className={`grid grid-cols-1 gap-2 transition-all duration-300 overflow-hidden ${
+                      isExpanded ? "max-h-[2000px] opacity-100 mt-4" : "max-h-0 opacity-0"
+                    }`}
+                  >
+                    {category.skills.map((skill) => (
+                      <SkillBadge key={skill.name} skill={skill.name} icon={skill.icon} />
+                    ))}
+                  </div>
+
+                  {!isExpanded && (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Click para ver {category.skills.length} habilidades
+                    </p>
+                  )}
+                </Card>
+              )
+            })}
+          </div>
+
+          {/* Indicators */}
+          <div className="flex justify-center gap-2 mt-6">
+            {skillCategories.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setIsAutoPlaying(false)
+                  setCurrentIndex(index)
+                }}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index === currentIndex ? "w-8 bg-primary" : "w-2 bg-primary/30 hover:bg-primary/50"
+                }`}
+                aria-label={`Ir a categoría ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
+
+        <style jsx global>{`
+          .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+          .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
       </div>
     </section>
   )
