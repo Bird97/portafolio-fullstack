@@ -117,11 +117,9 @@ export function SkillsSection() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const isScrollingRef = useRef(false)
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   const toggleCategory = (title: string) => {
-    setIsAutoPlaying(false) // Detener auto-play cuando el usuario interactúa
+    setIsAutoPlaying(false)
     const newExpanded = new Set(expandedCategories)
     if (newExpanded.has(title)) {
       newExpanded.delete(title)
@@ -210,76 +208,43 @@ export function SkillsSection() {
     },
   ]
 
-  // Auto-scroll effect
+  // Auto-scroll automático
   useEffect(() => {
     if (!isAutoPlaying) return
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % skillCategories.length)
-    }, 3000) // Cambia cada 3 segundos
+    }, 3500)
 
     return () => clearInterval(interval)
   }, [isAutoPlaying, skillCategories.length])
 
-  // Scroll to current card (solo cuando NO es scroll manual)
+  // Scroll cuando cambia el índice
   useEffect(() => {
-    if (scrollContainerRef.current && !isScrollingRef.current) {
-      const cards = scrollContainerRef.current.children
-      if (cards[currentIndex]) {
-        cards[currentIndex].scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
-        })
-      }
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current
+      const cardWidth = container.children[0]?.clientWidth || 0
+      const gap = 24
+      const scrollPosition = currentIndex * (cardWidth + gap)
+      
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: "smooth",
+      })
     }
   }, [currentIndex])
 
-  // Detectar scroll manual para actualizar el índice
-  useEffect(() => {
-    const container = scrollContainerRef.current
-    if (!container) return
-
-    const handleScroll = () => {
-      isScrollingRef.current = true
-      
-      // Limpiar timeout anterior
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current)
-      }
-
-      // Esperar a que el scroll se detenga
-      scrollTimeoutRef.current = setTimeout(() => {
-        const scrollLeft = container.scrollLeft
-        const cardWidth = container.children[0]?.clientWidth || 0
-        const gap = 24 // gap-6 = 24px
-        const newIndex = Math.round(scrollLeft / (cardWidth + gap))
-        
-        if (newIndex !== currentIndex && newIndex >= 0 && newIndex < skillCategories.length) {
-          setCurrentIndex(newIndex)
-        }
-        
-        isScrollingRef.current = false
-      }, 20) // Esperar 150ms después de que se detenga el scroll
-    }
-
-    container.addEventListener("scroll", handleScroll, { passive: true })
-    return () => {
-      container.removeEventListener("scroll", handleScroll)
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current)
-      }
-    }
-  }, [currentIndex, skillCategories.length])
+  const scrollToIndex = (index: number) => {
+    setIsAutoPlaying(false)
+    setCurrentIndex(index)
+  }
 
   const handlePrevious = () => {
-    setIsAutoPlaying(false)
-    setCurrentIndex((prev) => (prev - 1 + skillCategories.length) % skillCategories.length)
+    scrollToIndex((currentIndex - 1 + skillCategories.length) % skillCategories.length)
   }
 
   const handleNext = () => {
-    setIsAutoPlaying(false)
-    setCurrentIndex((prev) => (prev + 1) % skillCategories.length)
+    scrollToIndex((currentIndex + 1) % skillCategories.length)
   }
 
   const handleCardClick = (index: number, title: string) => {
@@ -387,10 +352,7 @@ export function SkillsSection() {
             {skillCategories.map((_, index) => (
               <button
                 key={index}
-                onClick={() => {
-                  setIsAutoPlaying(false)
-                  setCurrentIndex(index)
-                }}
+                onClick={() => scrollToIndex(index)}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   index === currentIndex ? "w-8 bg-primary" : "w-2 bg-primary/30 hover:bg-primary/50"
                 }`}

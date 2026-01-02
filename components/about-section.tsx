@@ -1,6 +1,6 @@
 "use client"
 
-import { Code2, Palette, Zap, Coffee, PawPrint, Trophy } from "lucide-react"
+import { Code2, Palette, Zap, Coffee, PawPrint, Trophy, Volleyball } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { useState } from "react"
 
@@ -29,8 +29,8 @@ export function AboutSection() {
       title: "¿Por qué lo hago?",
       description:
         "Porque creo en el poder de la tecnología para transformar ideas en realidades digitales que impactan positivamente a las personas.",
-      personalInfo: "Me gusta mucho el fútbol",
-      personalIcon: Trophy,
+      personalInfo: "Me gusta mucho el fútbol y el voleibol",
+      personalIcon: Volleyball,
     },
   ]
 
