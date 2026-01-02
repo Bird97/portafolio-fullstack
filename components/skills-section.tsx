@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useState, useEffect, useRef } from "react"
 import { X, Code2, Server, Database, Wrench, TestTube, Palette, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
+import Image from "next/image"
 
-function SkillBadge({ skill, icon }: { skill: string; icon: string }) {
+function SkillBadge({ skill, imagePath, icon }: { skill: string; imagePath?: string; icon?: string }) {
   const [showCard, setShowCard] = useState(false)
 
   const getSkillDescription = (skillName: string): string => {
@@ -31,9 +32,9 @@ function SkillBadge({ skill, icon }: { skill: string; icon: string }) {
       NestJS: "Framework de Node.js con TypeScript para construir aplicaciones del lado del servidor escalables",
       TypeORM: "ORM de TypeScript para trabajar con bases de datos usando objetos en lugar de SQL",
       Bootstrap: "Framework CSS con componentes prediseñados para desarrollo web responsivo",
+      Swagger: "Herramienta para documentar, diseñar y probar APIs REST de forma interactiva",
       JWT: "Estándar para crear tokens de acceso seguros que permiten autenticación sin estado",
       "REST APIs": "Arquitectura para crear servicios web que comunican sistemas mediante HTTP",
-      GraphQL: "Lenguaje de consulta para APIs que permite solicitar exactamente los datos necesarios",
       Docker: "Plataforma para crear, distribuir y ejecutar aplicaciones en contenedores aislados",
       AWS: "Plataforma de servicios en la nube de Amazon para hosting, bases de datos y más",
       Firebase: "Plataforma de Google para desarrollo de apps con base de datos en tiempo real y autenticación",
@@ -50,9 +51,8 @@ function SkillBadge({ skill, icon }: { skill: string; icon: string }) {
       "React Testing Library": "Biblioteca para probar componentes de React simulando el comportamiento del usuario",
       Playwright: "Framework moderno para pruebas automatizadas de navegadores web",
       SEO: "Optimización para motores de búsqueda para mejorar la visibilidad en Google",
-      Linux: "Sistema operativo de código abierto usado en servidores y desarrollo",
       "VS Code": "Editor de código potente y extensible de Microsoft",
-      Jira: "Herramienta de gestión de proyectos y seguimiento de issues para equipos ágiles",
+      Trello: "Herramienta de gestión de proyectos y seguimiento de issues para equipos ágiles",
       Vercel: "Plataforma para desplegar aplicaciones web con Next.js de forma rápida y escalable",
       "Responsive Design": "Técnica para crear sitios web que se adaptan a cualquier tamaño de pantalla",
     }
@@ -62,10 +62,22 @@ function SkillBadge({ skill, icon }: { skill: string; icon: string }) {
   return (
     <>
       <div
-        className="group flex items-center gap-2 bg-secondary/50 hover:bg-primary/10 border border-border hover:border-primary/50 rounded-lg px-4 py-3 cursor-pointer transition-all  hover:shadow-md"
+        className="group flex items-center gap-3 bg-secondary/50 hover:bg-primary/10 border border-border hover:border-primary/50 rounded-lg px-4 py-3 cursor-pointer transition-all hover:shadow-md"
         onClick={() => setShowCard(true)}
       >
-        <span className="text-2xl">{icon}</span>
+        {imagePath ? (
+          <div className="relative w-8 h-8 flex-shrink-0">
+            <Image
+              src={imagePath}
+              alt={skill}
+              width={32}
+              height={32}
+              className="object-contain"
+            />
+          </div>
+        ) : (
+          <span className="text-2xl">{icon}</span>
+        )}
         <span className="text-sm md:text-base font-medium group-hover:text-primary transition-colors">
           {skill}
         </span>
@@ -75,7 +87,7 @@ function SkillBadge({ skill, icon }: { skill: string; icon: string }) {
       {showCard && (
         <>
           <div
-            className="fixed inset-0 bg-black/60 z-[60] animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/60 z-[60] animate-in fade-in rounded-lg duration-200"
             onClick={() => setShowCard(false)}
           />
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] w-[90%] max-w-md animate-in zoom-in-95 fade-in duration-200">
@@ -89,8 +101,20 @@ function SkillBadge({ skill, icon }: { skill: string; icon: string }) {
                 <X className="h-5 w-5" />
               </Button>
               <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-                  <span className="text-5xl">{icon}</span>
+                <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center p-4">
+                  {imagePath ? (
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={imagePath}
+                        alt={skill}
+                        width={80}
+                        height={80}
+                        className="object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <span className="text-5xl">{icon}</span>
+                  )}
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-primary">{skill}</h3>
                 <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
@@ -108,22 +132,19 @@ function SkillBadge({ skill, icon }: { skill: string; icon: string }) {
 interface SkillCategory {
   title: string
   icon: React.ReactNode
-  skills: Array<{ name: string; icon: string }>
+  skills: Array<{ name: string; imagePath?: string; icon?: string }>
   gradient: string
 }
 
 export function SkillsSection() {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const isProgrammaticScroll = useRef(false)
 
   const toggleCategory = (title: string) => {
-    setIsAutoPlaying(false)
-    const newExpanded = new Set(expandedCategories)
-    if (newExpanded.has(title)) {
-      newExpanded.delete(title)
-    } else {
+    const newExpanded = new Set<string>()
+    if (!expandedCategories.has(title)) {
       newExpanded.add(title)
     }
     setExpandedCategories(newExpanded)
@@ -135,14 +156,14 @@ export function SkillsSection() {
       icon: <Code2 className="h-6 w-6" />,
       gradient: "from-blue-500/10 to-cyan-500/10",
       skills: [
-        { name: "React", icon: "⚛️" },
-        { name: "Next.js", icon: "▲" },
-        { name: "TypeScript", icon: "🔷" },
-        { name: "JavaScript", icon: "🟨" },
-        { name: "HTML5", icon: "🧱" },
-        { name: "CSS3", icon: "🎨" },
-        { name: "Tailwind CSS", icon: "💨" },
-        { name: "Redux", icon: "🔄" },
+        { name: "React", imagePath: "/images/frontend/react.png" },
+        { name: "Next.js", imagePath: "/images/frontend/nextjs.png" },
+        { name: "TypeScript", imagePath: "/images/frontend/typescript.png" },
+        { name: "JavaScript", imagePath: "/images/frontend/javascript.png" },
+        { name: "HTML5", imagePath: "/images/frontend/HTML5.png" },
+        { name: "CSS3", imagePath: "/images/frontend/CSS3.png" },
+        { name: "Tailwind CSS", imagePath: "/images/frontend/tailwind.png" },
+        { name: "Redux", imagePath: "/images/frontend/redux.svg" },
         { name: "Responsive Design", icon: "📱" },
       ],
     },
@@ -151,12 +172,12 @@ export function SkillsSection() {
       icon: <Server className="h-6 w-6" />,
       gradient: "from-green-500/10 to-emerald-500/10",
       skills: [
-        { name: "Node.js", icon: "🟢" },
-        { name: "NestJS", icon: "🔴" },
-        { name: "Express", icon: "⚡" },
+        { name: "Node.js", imagePath: "/images/backend/node.svg" },
+        { name: "NestJS", imagePath: "/images/backend/Nestjs.png" },
+        { name: "Express", imagePath: "/images/backend/expressjs.svg" },
         { name: "REST APIs", icon: "🔌" },
-        { name: "GraphQL", icon: "◼️" },
-        { name: "JWT", icon: "🔐" },
+        { name: "Swagger", imagePath: "/images/backend/swagger.png" },
+        { name: "JWT", imagePath: "/images/backend/jwt.png" },
       ],
     },
     {
@@ -164,10 +185,10 @@ export function SkillsSection() {
       icon: <Database className="h-6 w-6" />,
       gradient: "from-purple-500/10 to-pink-500/10",
       skills: [
-        { name: "PostgreSQL", icon: "🐘" },
-        { name: "MongoDB", icon: "🍃" },
-        { name: "TypeORM", icon: "📊" },
-        { name: "SQL", icon: "💾" },
+        { name: "PostgreSQL", imagePath: "/images/db/postgresql.png" },
+        { name: "MongoDB", imagePath: "/images/db/mongodb.png" },
+        { name: "TypeORM", imagePath: "/images/db/typeorm.png" },
+        { name: "SQL", imagePath: "/images/db/Sql.png" },
       ],
     },
     {
@@ -175,13 +196,11 @@ export function SkillsSection() {
       icon: <Wrench className="h-6 w-6" />,
       gradient: "from-orange-500/10 to-red-500/10",
       skills: [
-        { name: "Docker", icon: "🐳" },
-        { name: "Git", icon: "📦" },
-        { name: "GitHub", icon: "🐙" },
-        { name: "AWS", icon: "☁️" },
-        { name: "Vercel", icon: "▲" },
-        { name: "CI/CD", icon: "🔄" },
-        { name: "Linux", icon: "🐧" },
+        { name: "Docker", imagePath: "/images/devops/docker.svg" },
+        { name: "Git", imagePath: "/images/devops/git.svg" },
+        { name: "GitHub", imagePath: "/images/devops/github.png" },
+        { name: "AWS", imagePath: "/images/devops/aws.png" },
+        { name: "Vercel", imagePath: "/images/devops/vercel.svg" },
       ],
     },
     {
@@ -189,10 +208,10 @@ export function SkillsSection() {
       icon: <TestTube className="h-6 w-6" />,
       gradient: "from-yellow-500/10 to-amber-500/10",
       skills: [
-        { name: "Jest", icon: "🃏" },
-        { name: "Cypress", icon: "🌲" },
-        { name: "React Testing Library", icon: "🧪" },
-        { name: "Playwright", icon: "🎭" },
+        { name: "Jest", imagePath: "/images/testing/jest.png" },
+        { name: "Cypress", imagePath: "/images/testing/cypress.png" },
+        { name: "React Testing Library", imagePath: "/images/testing/reacttestinglibrary.png" },
+        { name: "Playwright", imagePath: "/images/testing/playwright.png" },
       ],
     },
     {
@@ -200,42 +219,94 @@ export function SkillsSection() {
       icon: <Palette className="h-6 w-6" />,
       gradient: "from-rose-500/10 to-pink-500/10",
       skills: [
-        { name: "Figma", icon: "🎨" },
+        { name: "Figma", imagePath: "/images/design/figma.png" },
         { name: "Agile/Scrum", icon: "📋" },
-        { name: "Jira", icon: "📊" },
-        { name: "VS Code", icon: "💻" },
+        { name: "Trello", imagePath: "/images/design/trello.png" },
+        { name: "VS Code", imagePath: "/images/design/vscode.png" },
       ],
     },
   ]
-
-  // Auto-scroll automático
-  useEffect(() => {
-    if (!isAutoPlaying) return
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % skillCategories.length)
-    }, 3500)
-
-    return () => clearInterval(interval)
-  }, [isAutoPlaying, skillCategories.length])
 
   // Scroll cuando cambia el índice
   useEffect(() => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current
-      const cardWidth = container.children[0]?.clientWidth || 0
-      const gap = 24
-      const scrollPosition = currentIndex * (cardWidth + gap)
+      const card = container.children[currentIndex] as HTMLElement
       
-      container.scrollTo({
-        left: scrollPosition,
-        behavior: "smooth",
-      })
+      if (card) {
+        // Para las tarjetas de los bordes, scroll al borde; para las del centro, centrar
+        const containerWidth = container.offsetWidth
+        const cardWidth = card.offsetWidth
+        const cardLeft = card.offsetLeft
+        const maxScroll = container.scrollWidth - containerWidth
+        
+        // Calcular posición ideal centrada
+        let scrollPosition = cardLeft - (containerWidth / 2) + (cardWidth / 2)
+        
+        // Limitar a los bordes del scroll
+        scrollPosition = Math.max(0, Math.min(scrollPosition, maxScroll))
+        
+        isProgrammaticScroll.current = true
+        container.scrollTo({
+          left: scrollPosition,
+          behavior: "smooth",
+        })
+        
+        // Reset flag después de que termine el scroll
+        setTimeout(() => {
+          isProgrammaticScroll.current = false
+        }, 1000)
+      }
+    }
+  }, [currentIndex])
+
+  // Detectar scroll manual en móvil
+  useEffect(() => {
+    const container = scrollContainerRef.current
+    if (!container) return
+
+    let scrollTimeout: NodeJS.Timeout
+
+    const handleScroll = () => {
+      // Ignorar scroll si es programático
+      if (isProgrammaticScroll.current) return
+      
+      clearTimeout(scrollTimeout)
+      
+      scrollTimeout = setTimeout(() => {
+        const scrollLeft = container.scrollLeft
+        const containerWidth = container.offsetWidth
+        const scrollCenter = scrollLeft + containerWidth / 2
+
+        // Encontrar la tarjeta más cercana al centro
+        let closestIndex = 0
+        let minDistance = Infinity
+
+        Array.from(container.children).forEach((child, index) => {
+          const card = child as HTMLElement
+          const cardCenter = card.offsetLeft + card.offsetWidth / 2
+          const distance = Math.abs(scrollCenter - cardCenter)
+
+          if (distance < minDistance) {
+            minDistance = distance
+            closestIndex = index
+          }
+        })
+
+        if (closestIndex !== currentIndex) {
+          setCurrentIndex(closestIndex)
+        }
+      }, 150)
+    }
+
+    container.addEventListener("scroll", handleScroll, { passive: true })
+    return () => {
+      container.removeEventListener("scroll", handleScroll)
+      clearTimeout(scrollTimeout)
     }
   }, [currentIndex])
 
   const scrollToIndex = (index: number) => {
-    setIsAutoPlaying(false)
     setCurrentIndex(index)
   }
 
@@ -248,7 +319,6 @@ export function SkillsSection() {
   }
 
   const handleCardClick = (index: number, title: string) => {
-    setIsAutoPlaying(false)
     setCurrentIndex(index)
     toggleCategory(title)
   }
@@ -294,9 +364,7 @@ export function SkillsSection() {
           {/* Cards Container */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-6 pt-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 px-2 hide-scrollbar"
-            onMouseEnter={() => setIsAutoPlaying(false)}
-            onTouchStart={() => setIsAutoPlaying(false)}
+            className="flex gap-6 pt-5 pl-3 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 px-2 hide-scrollbar"
           >
             {skillCategories.map((category, index) => {
               const isExpanded = expandedCategories.has(category.title)
@@ -307,15 +375,15 @@ export function SkillsSection() {
                   className={`flex-shrink-0 w-[85vw] md:w-[400px] snap-center p-6 bg-gradient-to-br ${category.gradient} border-2 transition-all duration-300 ${
                     isActive
                       ? "border-primary shadow-xl scale-105"
-                      : "border-border hover:border-primary/50 hover:shadow-lg"
+                      : "border-border hover:border-primary/50 hover:shadow-lg "
                   }`}
                 >
                   <div
-                    className="flex items-center justify-between cursor-pointer group"
+                    className="flex items-center justify-between cursor-pointer group "
                     onClick={() => handleCardClick(index, category.title)}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center rounded-full text-primary">
                         {category.icon}
                       </div>
                       <h3 className="text-xl md:text-2xl font-bold">{category.title}</h3>
@@ -329,11 +397,11 @@ export function SkillsSection() {
 
                   <div
                     className={`grid grid-cols-1 gap-2 transition-all duration-300 overflow-hidden ${
-                      isExpanded ? "max-h-[2000px] opacity-100 mt-4" : "max-h-0 opacity-0"
+                      isExpanded ? "max-h-[2000px] opacity-100  mt-4" : "max-h-0 opacity-0 "
                     }`}
                   >
                     {category.skills.map((skill) => (
-                      <SkillBadge key={skill.name} skill={skill.name} icon={skill.icon} />
+                      <SkillBadge key={skill.name} skill={skill.name} imagePath={skill.imagePath} icon={skill.icon} />
                     ))}
                   </div>
 
@@ -354,7 +422,7 @@ export function SkillsSection() {
                 key={index}
                 onClick={() => scrollToIndex(index)}
                 className={`h-2 rounded-full transition-all duration-300 ${
-                  index === currentIndex ? "w-8 bg-primary" : "w-2 bg-primary/30 hover:bg-primary/50"
+                  index === currentIndex ? "w-8 bg-primary"  : "w-2 bg-primary/30 hover:bg-primary/50"
                 }`}
                 aria-label={`Ir a categoría ${index + 1}`}
               />

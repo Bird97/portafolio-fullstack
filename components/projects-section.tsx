@@ -45,7 +45,7 @@ export function ProjectsSection() {
       title: "Ahumados al Barril",
       description:
         "Desarrollé e implementé un programa de gestión integral para un restaurante usando Angular y Node.js. Mejoré la eficiencia operativa del restaurante, reduciendo errores en la toma de pedidos y mejorando la experiencia del cliente.",
-      image: "/images/captura.jpeg",
+      image: "/images/barril.jpeg",
       tags: ["Angular", "Node.js", "Full Stack"],
       period: "2024-2025",
     },

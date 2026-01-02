@@ -88,6 +88,19 @@ export function ProcessSection() {
             const FrontIcon = step.icon
             const BackIcon = step.backIcon
             const isFlipped = flippedCards.includes(index)
+            
+            // Generar gradiente de color de fondo desde bg-card a azul clarito
+            const getBackgroundColor = (idx: number) => {
+              const colors = [
+                'bg-card',
+                'bg-gradient-to-br from-card to-blue-50/30 dark:to-blue-950/20',
+                'bg-gradient-to-br from-card to-blue-100/40 dark:to-blue-900/25',
+                'bg-gradient-to-br from-card to-blue-100/50 dark:to-blue-900/30',
+                'bg-gradient-to-br from-card to-blue-200/50 dark:to-blue-800/35',
+                'bg-gradient-to-br from-card to-blue-200/60 dark:to-blue-800/40',
+              ]
+              return colors[idx] || colors[colors.length - 1]
+            }
 
             return (
               <div
@@ -103,7 +116,7 @@ export function ProcessSection() {
                 >
                   {/* Front side */}
                   <div
-                    className="absolute inset-0 backface-hidden flex items-start gap-2 md:gap-4 p-4 md:p-5 lg:p-6 rounded-lg bg-card border-2 border-border hover:border-primary/50 transition-all"
+                    className={`absolute inset-0 backface-hidden flex items-start gap-2 md:gap-4 p-4 md:p-5 lg:p-6 rounded-lg ${getBackgroundColor(index)} border-2 border-border hover:border-primary/50 transition-all`}
                     style={{ backfaceVisibility: "hidden" }}
                   >
                     <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-lg flex items-center justify-center">
