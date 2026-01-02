@@ -1,10 +1,11 @@
 "use client"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { useState } from "react"
-import { X, Code2, Server, Wrench } from "lucide-react"
+import { X, Code2, Server, Database, Wrench, TestTube, Palette, ChevronDown } from "lucide-react"
 
-function SkillBadge({ skill }: { skill: string }) {
+function SkillBadge({ skill, icon }: { skill: string; icon: string }) {
   const [showCard, setShowCard] = useState(false)
 
   const getSkillDescription = (skillName: string): string => {
@@ -58,65 +59,17 @@ function SkillBadge({ skill }: { skill: string }) {
     return descriptions[skillName] || "Tecnología para desarrollo web"
   }
 
-  const getSkillIcon = (skillName: string) => {
-    const icons: Record<string, string> = {
-      React: "⚛️",
-      "Next.js": "▲",
-      TypeScript: "TS",
-      JavaScript: "JS",
-      HTML5: "HTML",
-      CSS3: "CSS",
-      "Tailwind CSS": "💨",
-      Sass: "💅",
-      Redux: "🔄",
-      "Vue.js": "V",
-      Angular: "A",
-      "Node.js": "🟢",
-      Express: "E",
-      Python: "🐍",
-      Django: "D",
-      PostgreSQL: "🐘",
-      MongoDB: "🍃",
-      NestJS: "N",
-      TypeORM: "📊",
-      Bootstrap: "B",
-      JWT: "🔐",
-      "REST APIs": "🔌",
-      GraphQL: "◼️",
-      Docker: "🐳",
-      AWS: "☁️",
-      Firebase: "🔥",
-      SQL: "💾",
-      Git: "📦",
-      GitHub: "🐙",
-      Figma: "🎨",
-      "Adobe XD": "🎨",
-      "CI/CD": "🔄",
-      "Agile/Scrum": "📋",
-      Testing: "✅",
-      Jest: "🃏",
-      Cypress: "🌲",
-      "React Testing Library": "🧪",
-      Playwright: "🎭",
-      SEO: "🔍",
-      Linux: "🐧",
-      "VS Code": "💻",
-      Jira: "📊",
-      Vercel: "▲",
-      "Responsive Design": "📱",
-    }
-    return icons[skillName] || "💻"
-  }
-
   return (
     <>
-      <Badge
-        variant="secondary"
-        className="text-base py-2 px-4 hover:bg-primary hover:text-primary-foreground hover:scale-110 transition-all cursor-pointer"
+      <div
+        className="group flex items-center gap-2 bg-secondary/50 hover:bg-primary/10 border border-border hover:border-primary/50 rounded-lg px-4 py-3 cursor-pointer transition-all hover:scale-101 hover:shadow-md"
         onClick={() => setShowCard(true)}
       >
-        {skill}
-      </Badge>
+        <span className="text-2xl">{icon}</span>
+        <span className="text-sm md:text-base font-medium group-hover:text-primary transition-colors">
+          {skill}
+        </span>
+      </div>
 
       {/* Card Modal */}
       {showCard && (
@@ -137,7 +90,7 @@ function SkillBadge({ skill }: { skill: string }) {
               </Button>
               <div className="flex flex-col items-center text-center space-y-4">
                 <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-                  <span className="text-5xl">{getSkillIcon(skill)}</span>
+                  <span className="text-5xl">{icon}</span>
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-primary">{skill}</h3>
                 <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
@@ -152,197 +105,160 @@ function SkillBadge({ skill }: { skill: string }) {
   )
 }
 
+interface SkillCategory {
+  title: string
+  icon: React.ReactNode
+  skills: Array<{ name: string; icon: string }>
+  gradient: string
+}
+
 export function SkillsSection() {
-  const [activePanel, setActivePanel] = useState<"frontend" | "backend" | "otros" | null>(null)
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
 
-  const skills = {
-    frontend: [
-      "React",
-      "Angular",
-      "Next.js",
-      "TypeScript",
-      "JavaScript",
-      "HTML5",
-      "CSS3",
-      "Tailwind CSS",
-      "Bootstrap",
-      "Sass",
-      "Redux",
-      "Responsive Design",
-    ],
-    backend: [
-      "Node.js",
-      "NestJS",
-      "Express",
-      "PostgreSQL",
-      "TypeORM",
-      "MongoDB",
-      "REST APIs",
-      "JWT",
-      "Docker",
-      "AWS",
-      "SQL",
-    ],
-    otros: [
-      "Git",
-      "GitHub",
-      "Testing",
-      "Jest",
-      "React Testing Library",
-      "Figma",
-      "CI/CD",
-      "Agile/Scrum",
-      "Linux",
-      "VS Code",
-      "Jira",
-      "Vercel",
-    ],
+  const toggleCategory = (title: string) => {
+    const newExpanded = new Set(expandedCategories)
+    if (newExpanded.has(title)) {
+      newExpanded.delete(title)
+    } else {
+      newExpanded.add(title)
+    }
+    setExpandedCategories(newExpanded)
   }
 
-  const handlePanelToggle = (panel: "frontend" | "backend" | "otros") => {
-    setActivePanel(activePanel === panel ? null : panel)
-  }
+  const skillCategories: SkillCategory[] = [
+    {
+      title: "Frontend",
+      icon: <Code2 className="h-6 w-6" />,
+      gradient: "from-blue-500/10 to-cyan-500/10",
+      skills: [
+        { name: "React", icon: "⚛️" },
+        { name: "Next.js", icon: "▲" },
+        { name: "TypeScript", icon: "🔷" },
+        { name: "JavaScript", icon: "🟨" },
+        { name: "HTML5", icon: "🧱" },
+        { name: "CSS3", icon: "🎨" },
+        { name: "Tailwind CSS", icon: "💨" },
+        { name: "Redux", icon: "🔄" },
+        { name: "Responsive Design", icon: "📱" },
+      ],
+    },
+    {
+      title: "Backend",
+      icon: <Server className="h-6 w-6" />,
+      gradient: "from-green-500/10 to-emerald-500/10",
+      skills: [
+        { name: "Node.js", icon: "🟢" },
+        { name: "NestJS", icon: "🔴" },
+        { name: "Express", icon: "⚡" },
+        { name: "REST APIs", icon: "🔌" },
+        { name: "GraphQL", icon: "◼️" },
+        { name: "JWT", icon: "🔐" },
+      ],
+    },
+    {
+      title: "Bases de Datos",
+      icon: <Database className="h-6 w-6" />,
+      gradient: "from-purple-500/10 to-pink-500/10",
+      skills: [
+        { name: "PostgreSQL", icon: "🐘" },
+        { name: "MongoDB", icon: "🍃" },
+        { name: "TypeORM", icon: "📊" },
+        { name: "SQL", icon: "💾" },
+      ],
+    },
+    {
+      title: "DevOps & Herramientas",
+      icon: <Wrench className="h-6 w-6" />,
+      gradient: "from-orange-500/10 to-red-500/10",
+      skills: [
+        { name: "Docker", icon: "🐳" },
+        { name: "Git", icon: "📦" },
+        { name: "GitHub", icon: "🐙" },
+        { name: "AWS", icon: "☁️" },
+        { name: "Vercel", icon: "▲" },
+        { name: "CI/CD", icon: "🔄" },
+        { name: "Linux", icon: "🐧" },
+      ],
+    },
+    {
+      title: "Testing",
+      icon: <TestTube className="h-6 w-6" />,
+      gradient: "from-yellow-500/10 to-amber-500/10",
+      skills: [
+        { name: "Jest", icon: "🃏" },
+        { name: "Cypress", icon: "🌲" },
+        { name: "React Testing Library", icon: "🧪" },
+        { name: "Playwright", icon: "🎭" },
+      ],
+    },
+    {
+      title: "Diseño & Otros",
+      icon: <Palette className="h-6 w-6" />,
+      gradient: "from-rose-500/10 to-pink-500/10",
+      skills: [
+        { name: "Figma", icon: "🎨" },
+        { name: "Agile/Scrum", icon: "📋" },
+        { name: "Jira", icon: "📊" },
+        { name: "VS Code", icon: "💻" },
+      ],
+    },
+  ]
 
   return (
     <section id="habilidades" className="py-24 bg-secondary/30 relative overflow-hidden">
       <div className="w-full px-4 md:px-8 mx-auto max-w-7xl">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Habilidades</h2>
-          <p className="text-lg md:text-2xl text-muted-foreground max-w-2xl mx-auto">
-            Tecnologías y herramientas que domino para crear soluciones completas
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">Habilidades Técnicas</h2>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+            Stack tecnológico completo para desarrollo Full Stack moderno
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
-          <Button
-            size="lg"
-            variant={activePanel === "frontend" ? "default" : "outline"}
-            className="text-lg md:text-xl w-full sm:w-auto flex items-center gap-2"
-            onClick={() => handlePanelToggle("frontend")}
-          >
-            <Code2 className="h-5 w-5" />
-            Front-End
-          </Button>
-          <Button
-            size="lg"
-            variant={activePanel === "backend" ? "default" : "outline"}
-            className="text-lg md:text-xl w-full sm:w-auto flex items-center gap-2"
-            onClick={() => handlePanelToggle("backend")}
-          >
-            <Server className="h-5 w-5" />
-            Back-End
-          </Button>
-          <Button
-            size="lg"
-            variant={activePanel === "otros" ? "default" : "outline"}
-            className="text-lg md:text-xl w-full sm:w-auto flex items-center gap-2"
-            onClick={() => handlePanelToggle("otros")}
-          >
-            <Wrench className="h-5 w-5" />
-            Otros
-          </Button>
-        </div>
-
-        {/* Panel desde la derecha - Frontend */}
-        <div
-          className={`fixed top-0 right-0 h-full w-full md:w-[500px] bg-background border-l shadow-2xl z-50 transition-transform duration-500 ease-in-out ${
-            activePanel === "frontend" ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          <div className="h-full overflow-y-auto p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Code2 className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold">Front-End</h3>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setActivePanel(null)}
-                className="h-10 w-10"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {skillCategories.map((category, index) => {
+            const isExpanded = expandedCategories.has(category.title)
+            return (
+              <Card
+                key={category.title}
+                className={`p-6 bg-gradient-to-br ${category.gradient} border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-lg animate-in fade-in slide-in-from-bottom-4`}
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <X className="h-6 w-6" />
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {skills.frontend.map((skill) => (
-                <SkillBadge key={skill} skill={skill} />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Panel desde abajo - Backend */}
-        <div
-          className={`fixed bottom-0 left-0 w-full h-[70vh] md:h-[500px] bg-background border-t shadow-2xl z-50 transition-transform duration-500 ease-in-out ${
-            activePanel === "backend" ? "translate-y-0" : "translate-y-full"
-          }`}
-        >
-          <div className="h-full overflow-y-auto p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Server className="h-6 w-6 text-primary" />
+                <div
+                  className="flex items-center justify-between cursor-pointer group"
+                  onClick={() => toggleCategory(category.title)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                      {category.icon}
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-bold">{category.title}</h3>
+                  </div>
+                  <ChevronDown
+                    className={`h-6 w-6 text-primary transition-transform duration-300 ${
+                      isExpanded ? "rotate-180" : ""
+                    }`}
+                  />
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold">Back-End</h3>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setActivePanel(null)}
-                className="h-10 w-10"
-              >
-                <X className="h-6 w-6" />
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {skills.backend.map((skill) => (
-                <SkillBadge key={skill} skill={skill} />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Panel desde la izquierda - Otros */}
-        <div
-          className={`fixed top-0 left-0 h-full w-full md:w-[500px] bg-background border-r shadow-2xl z-50 transition-transform duration-500 ease-in-out ${
-            activePanel === "otros" ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <div className="h-full overflow-y-auto p-6 md:p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Wrench className="h-6 w-6 text-primary" />
+                
+                <div
+                  className={`grid grid-cols-1 gap-2 transition-all duration-300 overflow-hidden ${
+                    isExpanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+                  }`}
+                >
+                  {category.skills.map((skill) => (
+                    <SkillBadge key={skill.name} skill={skill.name} icon={skill.icon} />
+                  ))}
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold">Otros</h3>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setActivePanel(null)}
-                className="h-10 w-10"
-              >
-                <X className="h-6 w-6" />
-              </Button>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              {skills.otros.map((skill) => (
-                <SkillBadge key={skill} skill={skill} />
-              ))}
-            </div>
-          </div>
-        </div>
 
-        {/* Overlay */}
-        {activePanel && (
-          <div
-            className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
-            onClick={() => setActivePanel(null)}
-          />
-        )}
+                {!isExpanded && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Click para ver {category.skills.length} habilidades
+                  </p>
+                )}
+              </Card>
+            )
+          })}
+        </div>
       </div>
     </section>
   )
