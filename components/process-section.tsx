@@ -68,9 +68,13 @@ export function ProcessSection() {
       backDescription: "Practico inglés a diario para comunicarme mejor en el ámbito internacional",
     },
   ]
-
   const toggleFlip = (index: number) => {
     setFlippedCards((prev) => (prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]))
+  }
+
+  // Generar clases de gradiente animado para cada card
+  const getAnimatedGradientClass = (idx: number) => {
+    return `process-card-gradient-${idx}`
   }
 
   return (
@@ -92,19 +96,6 @@ export function ProcessSection() {
             const FrontIcon = step.icon
             const BackIcon = step.backIcon
             const isFlipped = flippedCards.includes(index)
-            
-            // Generar gradiente de color de fondo desde bg-card a azul clarito
-            const getBackgroundColor = (idx: number) => {
-              const colors = [
-                'bg-card',
-                'bg-gradient-to-br from-card to-blue-50/30 dark:to-blue-950/20',
-                'bg-gradient-to-br from-card to-blue-100/40 dark:to-blue-900/25',
-                'bg-gradient-to-br from-card to-blue-100/50 dark:to-blue-900/30',
-                'bg-gradient-to-br from-card to-blue-200/50 dark:to-blue-800/35',
-                'bg-gradient-to-br from-card to-blue-200/60 dark:to-blue-800/40',
-              ]
-              return colors[idx] || colors[colors.length - 1]
-            }
 
             return (
               <div
@@ -118,18 +109,17 @@ export function ProcessSection() {
                   }`}
                   style={{ transformStyle: "preserve-3d" }}
                 >
-                  {/* Front side */}
+                  {/* Front side with animated gradient */}
                   <div
-                    className={`absolute inset-0 backface-hidden flex items-start gap-2 md:gap-4 p-4 md:p-5 lg:p-6 rounded-lg ${getBackgroundColor(index)} border-2 border-border hover:border-primary/50 transition-all`}
+                    className={`absolute inset-0 backface-hidden flex items-start gap-2 md:gap-4 p-4 md:p-5 lg:p-6 rounded-lg ${getAnimatedGradientClass(index)} border-2 border-border hover:border-primary/50 transition-all overflow-hidden`}
                     style={{ backfaceVisibility: "hidden" }}
                   >
-                    <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-lg flex items-center justify-center relative z-10">
                       <FrontIcon className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 relative z-10">
                       <div className="text-xl md:text-xl font-bold text-primary mb-1">Paso {index + 1}</div>
-                      <h3 className="text-base md:text-xl
-                       lg:text-xl font-bold mb-1 text-balance leading-tight">{step.title}</h3>
+                      <h3 className="text-base md:text-xl lg:text-xl font-bold mb-1 text-balance leading-tight">{step.title}</h3>
                       <p className="text-sm md:text-base lg:text-xl text-muted-foreground leading-snug">{step.description}</p>
                     </div>
                   </div>
@@ -146,13 +136,96 @@ export function ProcessSection() {
                       <h3 className="text-base md:text-xl lg:text-xl font-bold mb-1 text-balance leading-tight">{step.backTitle}</h3>
                       <p className="text-sm md:text-base lg:text-xl opacity-90 leading-snug">{step.backDescription}</p>
                     </div>
-                  </div>
-                </div>
+                  </div>                </div>
               </div>
             )
           })}
         </div>
-      </div>
+      </div>      <style jsx>{`
+        /* Card 0 - Azul muy suave */
+        .process-card-gradient-0 {
+          background: linear-gradient(-45deg, #ffffff, #f0f4ff, #e6ecff, #ffffff);
+          background-size: 400% 400%;
+          animation: gradientShift 5s ease infinite;
+        }
+        :global(.dark) .process-card-gradient-0 {
+          background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #0f172a);
+          background-size: 400% 400%;
+          animation: gradientShift 5s ease infinite;
+        }
+
+        /* Card 1 - Azul suave 30% */
+        .process-card-gradient-1 {
+          background: linear-gradient(-45deg, #f8fafc, #e6ecff, #dbeafe, #f8fafc);
+          background-size: 400% 400%;
+          animation: gradientShift 6s ease infinite;
+        }
+        :global(.dark) .process-card-gradient-1 {
+          background: linear-gradient(-45deg, #0f172a, #1e3a8a, #334155, #0f172a);
+          background-size: 400% 400%;
+          animation: gradientShift 6s ease infinite;
+        }
+
+        /* Card 2 - Azul medio 40% */
+        .process-card-gradient-2 {
+          background: linear-gradient(-45deg, #f0f4ff, #dbeafe, #c7d2fe, #f0f4ff);
+          background-size: 400% 400%;
+          animation: gradientShift 5.5s ease infinite;
+        }
+        :global(.dark) .process-card-gradient-2 {
+          background: linear-gradient(-45deg, #1e293b, #1e40af, #334155, #1e293b);
+          background-size: 400% 400%;
+          animation: gradientShift 5.5s ease infinite;
+        }
+
+        /* Card 3 - Azul medio 50% */
+        .process-card-gradient-3 {
+          background: linear-gradient(-45deg, #e6ecff, #c7d2fe, #a5b4fc, #e6ecff);
+          background-size: 400% 400%;
+          animation: gradientShift 4.5s ease infinite;
+        }
+        :global(.dark) .process-card-gradient-3 {
+          background: linear-gradient(-45deg, #1e3a8a, #2563eb, #1e40af, #1e3a8a);
+          background-size: 400% 400%;
+          animation: gradientShift 4.5s ease infinite;
+        }
+
+        /* Card 4 - Azul intenso 50% */
+        .process-card-gradient-4 {
+          background: linear-gradient(-45deg, #dbeafe, #a5b4fc, #93c5fd, #dbeafe);
+          background-size: 400% 400%;
+          animation: gradientShift 6.5s ease infinite;
+        }
+        :global(.dark) .process-card-gradient-4 {
+          background: linear-gradient(-45deg, #1e40af, #3b82f6, #2563eb, #1e40af);
+          background-size: 400% 400%;
+          animation: gradientShift 6.5s ease infinite;
+        }
+
+        /* Card 5 - Azul más intenso 60% */
+        .process-card-gradient-5 {
+          background: linear-gradient(-45deg, #c7d2fe, #93c5fd, #60a5fa, #c7d2fe);
+          background-size: 400% 400%;
+          animation: gradientShift 5.2s ease infinite;
+        }
+        :global(.dark) .process-card-gradient-5 {
+          background: linear-gradient(-45deg, #2563eb, #60a5fa, #3b82f6, #2563eb);
+          background-size: 400% 400%;
+          animation: gradientShift 5.2s ease infinite;
+        }
+
+        @keyframes gradientShift {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </section>
   )
 }

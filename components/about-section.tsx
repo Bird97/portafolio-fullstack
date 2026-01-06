@@ -33,14 +33,16 @@ export function AboutSection() {
       personalIcon: Volleyball,
     },
   ]
-
   const handleCardClick = (index: number) => {
     setFlippedCard(flippedCard === index ? null : index)
   }
 
   return (
-    <section id="acerca" className="py-24 bg-secondary/30">
-      <div className="w-full px-4 md:px-8 mx-auto max-w-7xl">
+    <section id="acerca" className="py-24 relative overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-animated" />
+      
+      <div className="w-full px-4 md:px-8 mx-auto max-w-7xl relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">Acerca de mí</h2>
           <p className="text-2xl text-muted-foreground max-w-2xl mx-auto">
@@ -101,10 +103,47 @@ export function AboutSection() {
                   </Card>
                 </div>
               </div>
-            )
-          })}
+            )          })}
         </div>
-      </div>
+      </div>      <style jsx>{`
+        .bg-gradient-animated {
+          background: linear-gradient(
+            -45deg,
+            oklch(0.99 0 0),
+            oklch(0.95 0.02 240),
+            oklch(0.90 0.05 240),
+            oklch(0.95 0.02 240),
+            oklch(0.99 0 0)
+          );
+          background-size: 400% 400%;
+          animation: gradientShift 5s ease infinite;
+        }
+        
+        :global(.dark) .bg-gradient-animated {
+          background: linear-gradient(
+            -45deg,
+            oklch(0.15 0.03 240),
+            oklch(0.20 0.05 240),
+            oklch(0.28 0.08 240),
+            oklch(0.20 0.05 240),
+            oklch(0.15 0.03 240)
+          );
+          background-size: 400% 400%;
+          animation: gradientShift 5s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
     </section>
   )
 }
