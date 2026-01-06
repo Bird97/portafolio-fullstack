@@ -54,8 +54,8 @@ export function ThemeToggle() {
         
         // Mostrar notificación según el tema
         if (newTheme === "dark") {
-          notification("success", "¡Así de oscura es Sara Luz!")
-          //Modo Oscuro Activado
+          notification("success", "¡Modo Oscuro Activado!")
+          //
         } else {
           notification("success", "¡Modo Claro Activado!")
         }
