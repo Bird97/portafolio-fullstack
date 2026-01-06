@@ -4,6 +4,7 @@ import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
+import { notification } from "@/app/utils/notification"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
@@ -48,7 +49,16 @@ export function ThemeToggle() {
 
       // Cambiar el tema después de un pequeño delay
       setTimeout(() => {
-        setTheme(theme === "dark" ? "light" : "dark")
+        const newTheme = theme === "dark" ? "light" : "dark"
+        setTheme(newTheme)
+        
+        // Mostrar notificación según el tema
+        if (newTheme === "dark") {
+          notification("success", "¡Así de oscura es Sara Luz!")
+          //Modo Oscuro Activado
+        } else {
+          notification("success", "¡Modo Claro Activado!")
+        }
       }, 200)
 
       // Remover el círculo después de la animación
