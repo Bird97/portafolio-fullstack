@@ -81,6 +81,10 @@ export function ProcessSection() {
           <p className="text-lg md:text-2xl text-muted-foreground max-w-2xl mx-auto">
             Un enfoque estructurado para crear soluciones digitales excepcionales
           </p>
+          <br />
+          <p className="text-2xs  text-muted-foreground max-w-2xl mx-auto">
+            (haz click sobre las tarjetas)
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">

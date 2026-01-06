@@ -46,6 +46,10 @@ export function AboutSection() {
           <p className="text-2xl text-muted-foreground max-w-2xl mx-auto">
             Transformando ideas en experiencias digitales excepcionales
           </p>
+          <br />
+          <p className="text-2xs  text-muted-foreground max-w-2xl mx-auto">
+            (haz click sobre las tarjetas)
+          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 md:gap-8">
